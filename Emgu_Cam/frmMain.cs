@@ -51,7 +51,7 @@ namespace Emgu_Cam
 
                 Image<Gray, byte> img = new Image<Gray, byte>(matImg.Bitmap);
                 Rectangle[] faces = faceCascade.DetectMultiScale(img);
-                Rectangle[] hands = handCascade.DetectMultiScale(img);
+                //Rectangle[] hands = handCascade.DetectMultiScale(img);
 
                 using (Graphics gr = Graphics.FromImage(matImg.Bitmap))
                 {
@@ -60,8 +60,8 @@ namespace Emgu_Cam
                     foreach (Rectangle face in faces)
                         gr.DrawRectangle(facePen, new Rectangle(face.X, face.Y, face.Width, face.Height));
 
-                    foreach (Rectangle hand in hands)
-                        gr.DrawRectangle(handPen, new Rectangle(hand.X, hand.Y, hand.Width, hand.Height));
+                    /*foreach (Rectangle hand in hands)
+                        gr.DrawRectangle(handPen, new Rectangle(hand.X, hand.Y, hand.Width, hand.Height));*/
                 }
 
                 viewer.Image = matImg;
