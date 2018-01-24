@@ -47,24 +47,17 @@ namespace Emgu_Cam
         {
             if (viewer != null)
             {
-                Mat matImg = capture.QueryFrame();
-
-                Image<Gray, byte> img = new Image<Gray, byte>(matImg.Bitmap);
-                Rectangle[] faces = faceCascade.DetectMultiScale(img);
-                //Rectangle[] hands = handCascade.DetectMultiScale(img);
-
-                using (Graphics gr = Graphics.FromImage(matImg.Bitmap))
+                using (Image<Bgr, byte> img = capture.QueryFrame().ToImage<Bgr, byte>())
                 {
-                    gr.SmoothingMode = SmoothingMode.AntiAlias;
 
-                    foreach (Rectangle face in faces)
-                        gr.DrawRectangle(facePen, new Rectangle(face.X, face.Y, face.Width, face.Height));
+                    Image<Gray, byte> imgGray = new Image<Gray, byte>(img.Bitmap);
+                    Rectangle[] faces = faceCascade.DetectMultiScale(imgGray);
 
-                    /*foreach (Rectangle hand in hands)
-                        gr.DrawRectangle(handPen, new Rectangle(hand.X, hand.Y, hand.Width, hand.Height));*/
+                        foreach (Rectangle face in faces)
+                            img.Draw(face, new Bgr(255, 100, 100), 2);
+
+                    viewer.Image = img;
                 }
-
-                viewer.Image = matImg;
             }
         }
 
