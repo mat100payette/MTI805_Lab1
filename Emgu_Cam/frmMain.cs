@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.UI;
 using Emgu.CV.Structure;
+using Emgu.CV.Util;
 
 namespace Emgu_Cam
 {
@@ -51,6 +52,7 @@ namespace Emgu_Cam
                 
                 using (Image<Bgr, byte> img = capture.QueryFrame().ToImage<Bgr, byte>())
                 {
+
                     if (edgeDetection == false)
                     {
                         using (Image<Gray, byte> imgGray = new Image<Gray, byte>(img.Bitmap))
@@ -60,7 +62,6 @@ namespace Emgu_Cam
                             foreach (Rectangle face in faces)
                                 img.Draw(face, rectColor, 2);
                         }
-                        
                     }
                     else
                     {
@@ -71,7 +72,6 @@ namespace Emgu_Cam
                         Bitmap bm2 = img.SmoothGaussian(3).Canny(70, 200).Bitmap;
                         bm2.MakeTransparent(Color.Black);
                        
-
                         gra.DrawImage(bm2, new Point(0, 0));
 
                     }
