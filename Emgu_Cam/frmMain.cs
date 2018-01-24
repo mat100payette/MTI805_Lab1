@@ -12,8 +12,10 @@ namespace Emgu_Cam
         private VideoCapture capture = null;
         private ImageBox viewer = null;
         private bool capturing = false;
+        private bool edgeDetection = false;
         private CascadeClassifier faceCascade = null;
         private Bgr rectColor = new Bgr(255, 100, 120);
+        private Size size = new Size(7, 7);
 
 
         public frmMain()
@@ -23,6 +25,8 @@ namespace Emgu_Cam
             InitCapture();
 
             faceCascade = new CascadeClassifier(Environment.CurrentDirectory + "/haarcascade_frontalface_default.xml");
+
+            edgeButton.Enabled = false;
         }
 
         private void InitCapture()
@@ -44,16 +48,33 @@ namespace Emgu_Cam
         {
             if (viewer != null)
             {
+                
                 using (Image<Bgr, byte> img = capture.QueryFrame().ToImage<Bgr, byte>())
                 {
-                    using (Image<Gray, byte> imgGray = new Image<Gray, byte>(img.Bitmap))
+                    if (edgeDetection == false)
                     {
-                        Rectangle[] faces = faceCascade.DetectMultiScale(imgGray);
+                        using (Image<Gray, byte> imgGray = new Image<Gray, byte>(img.Bitmap))
+                        {
+                            Rectangle[] faces = faceCascade.DetectMultiScale(imgGray);
 
-                        foreach (Rectangle face in faces)
-                            img.Draw(face, rectColor, 2);
+                            foreach (Rectangle face in faces)
+                                img.Draw(face, rectColor, 2);
+                        }
+                        
                     }
+                    else
+                    {
+                        Bitmap bm = img.Bitmap;
 
+                        Graphics gra = Graphics.FromImage(bm);
+                        gra.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                        Bitmap bm2 = img.SmoothGaussian(3).Canny(70, 200).Bitmap;
+                        bm2.MakeTransparent(Color.Black);
+                       
+
+                        gra.DrawImage(bm2, new Point(0, 0));
+
+                    }
                     viewer.Image = img;
                 }
             }
@@ -67,12 +88,14 @@ namespace Emgu_Cam
                 capture.Stop();
                 viewer.Image = null;
                 btnWebcam.Text = "Start Capture";
+                edgeButton.Enabled = false;
             }
             else
             {
                 capture.Start();
                 timer.Start();
                 btnWebcam.Text = "Stop Capture";
+                edgeButton.Enabled = true;
             }
             capturing = !capturing;
         }
@@ -86,6 +109,22 @@ namespace Emgu_Cam
         private void timer_Tick(object sender, EventArgs e)
         {
             CaptureCam();
+        }
+
+        private void edgeButton_Click(object sender, EventArgs e)
+        {
+            if (edgeDetection)
+            {
+                edgeDetection = false;
+                edgeButton.Text = "Edges Detection";
+            }
+            else
+            {
+                edgeDetection = true;
+                edgeButton.Text = "Face Detection";
+
+            }
+      
         }
     }
 }

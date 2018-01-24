@@ -33,11 +33,12 @@
             this.lblFPS = new System.Windows.Forms.Label();
             this.pnlCapture = new System.Windows.Forms.Panel();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.edgeButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnWebcam
             // 
-            this.btnWebcam.Location = new System.Drawing.Point(581, 371);
+            this.btnWebcam.Location = new System.Drawing.Point(457, 371);
             this.btnWebcam.Name = "btnWebcam";
             this.btnWebcam.Size = new System.Drawing.Size(130, 33);
             this.btnWebcam.TabIndex = 1;
@@ -67,11 +68,22 @@
             // 
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // edgeButton
+            // 
+            this.edgeButton.Location = new System.Drawing.Point(603, 371);
+            this.edgeButton.Name = "edgeButton";
+            this.edgeButton.Size = new System.Drawing.Size(108, 33);
+            this.edgeButton.TabIndex = 5;
+            this.edgeButton.Text = "Edges Detection";
+            this.edgeButton.UseVisualStyleBackColor = true;
+            this.edgeButton.Click += new System.EventHandler(this.edgeButton_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(724, 407);
+            this.Controls.Add(this.edgeButton);
             this.Controls.Add(this.pnlCapture);
             this.Controls.Add(this.lblFPS);
             this.Controls.Add(this.btnWebcam);
@@ -87,6 +99,7 @@
         private System.Windows.Forms.Label lblFPS;
         private System.Windows.Forms.Panel pnlCapture;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Button edgeButton;
     }
 }
 
