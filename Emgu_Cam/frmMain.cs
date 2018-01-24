@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.UI;
 using Emgu.CV.Structure;
+using Emgu.CV.Util;
 
 namespace Emgu_Cam
 {
@@ -46,12 +47,22 @@ namespace Emgu_Cam
             {
                 using (Image<Bgr, byte> img = capture.QueryFrame().ToImage<Bgr, byte>())
                 {
-                    using (Image<Gray, byte> imgGray = new Image<Gray, byte>(img.Bitmap))
+                    Bitmap bm = img.Bitmap;
+
+                    using (Image<Gray, byte> imgGray = new Image<Gray, byte>(bm))
                     {
                         Rectangle[] faces = faceCascade.DetectMultiScale(imgGray);
 
                         foreach (Rectangle face in faces)
                             img.Draw(face, rectColor, 2);
+
+                        Graphics gra = Graphics.FromImage(bm);
+                        gra.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                        Bitmap bm2 = img.SmoothGaussian(3).Canny(80, 160).Bitmap;
+                        bm2.MakeTransparent(Color.Black);
+
+                        gra.DrawImage(bm2, new Point(0, 0));
+
                     }
 
                     viewer.Image = img;
